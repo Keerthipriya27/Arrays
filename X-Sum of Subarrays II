@@ -1,0 +1,21 @@
+class Solution:
+    def findXSum(self, nums: List[int], k: int, x: int) -> List[int]:
+        n = len(nums)
+        ans = []
+        freq = Counter(nums[:k])
+        def get_xsum():
+            items = sorted(freq.items(), key=lambda p: (p[1], p[0]), reverse=True)
+            top_x = items[:x]
+            s = 0
+            for v, c in top_x:
+                s += v * c
+            return s        
+        ans.append(get_xsum())        
+        for i in range(k, n):
+            left = nums[i - k]
+            freq[left] -= 1
+            if freq[left] == 0:
+                del freq[left]
+            freq[nums[i]] += 1            
+            ans.append(get_xsum())       
+        return ans
